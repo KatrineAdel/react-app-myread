@@ -15,7 +15,7 @@ const BookShelfChanger = (props) => {
 }
 
 BookShelfChanger.propTypes = {
-    book: propTypes.array.isRequired,
+    book: propTypes.object.isRequired,
     updateBookShelf: propTypes.func.isRequired,
 }
 

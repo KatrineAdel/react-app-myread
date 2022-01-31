@@ -2,7 +2,7 @@ import React from 'react';
 import Book from './Book';
 import { Link } from 'react-router-dom';
 
-const BookSearch = ({ combinedBooks, updateBookShelf, setQuery, query }) => {
+const BookSearch = ({ combinedBooks, updateBookShelf, setQuery, query}) => {
     return (
         <div className="search-books">
             <div className="search-books-bar">
@@ -18,7 +18,7 @@ const BookSearch = ({ combinedBooks, updateBookShelf, setQuery, query }) => {
                     {
                         combinedBooks.map((book) => (
                             <li key={book.id}>
-                                <Book book={book} updateBookShelf={updateBookShelf} />
+                                <Book book={book} updateBookShelf={updateBookShelf}/>
                             </li>
                         ))
                     }

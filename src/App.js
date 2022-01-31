@@ -17,6 +17,7 @@ const BooksApp = () => {
 
   const [booksMap, setBooksMap] = useState([new Map()]);
 
+
   useEffect(() => {
     BooksAPI.getAll()
       .then(data => {
@@ -92,9 +93,9 @@ const BooksApp = () => {
               </div>
               <div className="list-books-content">
                 <div>
-                  <BookShelf title="Currently Reading" books={books} category={"currentlyReading"} updateBookShelf={updateBookShelf} />
-                  <BookShelf title="Want To Read" books={books} category={"wantToRead"} updateBookShelf={updateBookShelf} />
-                  <BookShelf title="Read" books={books} category={"read"} updateBookShelf={updateBookShelf} />
+                  <BookShelf title="Currently Reading" books={books} category={"currentlyReading"} updateBookShelf={updateBookShelf}/>
+                  <BookShelf title="Want To Read" books={books} category={"wantToRead"} updateBookShelf={updateBookShelf}/>
+                  <BookShelf title="Read" books={books} category={"read"} updateBookShelf={updateBookShelf}/>
                 </div>
               </div>
               <div className="open-search">

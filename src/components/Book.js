@@ -3,10 +3,11 @@ import BookShelfChanger from './BookShelfChanger';
 import propTypes from 'prop-types';
 
 const Book = (props) => {
+
     return (
         <div className="book">
             <div className="book-top">
-                <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${props.book.imageLinks.smallThumbnail})` }}></div>
+                <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${(props.book && props.book.imageLinks && props.book.imageLinks.smallThumbnail) ? props.book.imageLinks.smallThumbnail : `../public/book.png`} )` }}></div>
                 <div className="book-shelf-changer">
                     <BookShelfChanger book={props.book} updateBookShelf={props.updateBookShelf} />
                 </div>
@@ -18,7 +19,7 @@ const Book = (props) => {
 }
 
 Book.propTypes = {
-    book: propTypes.array.isRequired,
+    book: propTypes.object.isRequired,
     updateBookShelf: propTypes.func.isRequired,
 }
 
