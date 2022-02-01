@@ -9,12 +9,11 @@ const BooksApp = () => {
 
   const [books, setBooks] = useState([]);
 
-  const [flip, setFlip] = useState(true);
+  let [flip, setFlip] = useState(true);
 
   const [query, setQuery] = useState("");
 
   const [searchBooks, setSearchBooks] = useState([]);
-
 
   useEffect(() => {
     BooksAPI.getAll()
@@ -23,47 +22,54 @@ const BooksApp = () => {
       })
   }, []);
 
-  const updateBookShelf = (book, shelf) => {
-    const updateBooks = books.findIndex((b) => b.id === book.id)
-    const updateBookList = books
 
-    if (updateBooks === -1) {
+  const updateBookShelf = (book, shelf) => {
+    const updateBooks = books.map(b => {
+      if (b.id === book.id) {
+        book.shelf = shelf;
+        return book;
+      }
+      return b;
+    })
+    if (!updateBooks.concat(book.id)) {
       book.shelf = shelf;
-      updateBookList.push(book)
-    } else {
-      updateBookList[updateBooks].shelf = shelf
+      updateBooks.push(book)
     }
-    setBooks(updateBookList);
+    setBooks(updateBooks);
     BooksAPI.update(book, shelf);
     setFlip(!flip);
   }
 
-  const updateBookSearch = (query) => {
-
-    BooksAPI.search(query).then((data) => {
-      if (data && data.length > 0) {
-        for (let q of data) {
-          for (let b of books) {
-            if (q.id === b.id) {
-              const booksIndex = books.findIndex((book) => book.id === q.id)
-              q.shelf = books[booksIndex].shelf
-              setFlip(!flip);
+  useEffect(() => {
+    if (query.length !== 0) {
+      BooksAPI.search(query).then((data) => {
+        if (data.error) {
+          setSearchBooks([]);
+        }
+        else {
+          if (data) {
+            for (let q of data) {
+              for (let b of books) {
+                if (b.id === q.id) {
+                  const booksIndex = books.findIndex((book) => book.id === q.id)
+                  q.shelf = books[booksIndex].shelf
+                }
+              }
             }
+            setSearchBooks(data);
+            setFlip(!flip);
           }
         }
-      }
-      setSearchBooks(data);
-    })
-    setQuery(query);
-
-  }
+      })
+    }
+  }, [query])
 
   return (
     <div className="app">
       <Router>
         <Switch>
           <Route path="/search">
-            <BookSearch updateBookSearch={updateBookSearch} searchBooks={searchBooks} query={query} book={books} updateBookShelf={updateBookShelf} />
+            <BookSearch setQuery={setQuery} searchBooks={searchBooks} query={query} book={books} updateBookShelf={updateBookShelf} />
           </Route>
           <Route path="/">
             <div className="list-books">

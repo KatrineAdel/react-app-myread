@@ -12,7 +12,7 @@ const BookSearch = (props) => {
                     <button className="close-search">Close</button>
                 </Link>
                 <div className="search-books-input-wrapper">
-                    <input type="text" placeholder="Search by title or author" value={props.query} onChange={(event) => props.updateBookSearch(event.target.value)} />
+                    <input type="text" placeholder="Search by title or author" value={props.query} onChange={(event) => props.setQuery(event.target.value)} />
                 </div>
             </div>
             <div className="search-books-results">
@@ -34,7 +34,7 @@ BookSearch.propTypes = {
     book: propTypes.array.isRequired,
     query: propTypes.string.isRequired,
     searchBooks: propTypes.array.isRequired,
-    updateBookSearch: propTypes.func.isRequired,
+    setQuery: propTypes.func.isRequired,
     updateBookShelf: propTypes.func.isRequired,
 }
 
