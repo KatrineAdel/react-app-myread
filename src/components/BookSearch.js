@@ -1,8 +1,10 @@
 import React from 'react';
 import Book from './Book';
 import { Link } from 'react-router-dom';
+import propTypes from 'prop-types';
 
-const BookSearch = ({ combinedBooks, updateBookShelf, setQuery, query}) => {
+
+const BookSearch = (props) => {
     return (
         <div className="search-books">
             <div className="search-books-bar">
@@ -10,15 +12,15 @@ const BookSearch = ({ combinedBooks, updateBookShelf, setQuery, query}) => {
                     <button className="close-search">Close</button>
                 </Link>
                 <div className="search-books-input-wrapper">
-                    <input type="text" placeholder="Search by title or author" value={query} onChange={(event) => setQuery(event.target.value)} />
+                    <input type="text" placeholder="Search by title or author" value={props.query} onChange={(event) => props.updateBookSearch(event.target.value)} />
                 </div>
             </div>
             <div className="search-books-results">
                 <ol className="books-grid">
                     {
-                        combinedBooks.map((book) => (
+                        props.searchBooks && props.searchBooks.length > 0 && props.searchBooks.map((book) => (
                             <li key={book.id}>
-                                <Book book={book} updateBookShelf={updateBookShelf}/>
+                                <Book book={book} updateBookShelf={props.updateBookShelf} />
                             </li>
                         ))
                     }
@@ -26,6 +28,14 @@ const BookSearch = ({ combinedBooks, updateBookShelf, setQuery, query}) => {
             </div>
         </div>
     )
+}
+
+BookSearch.propTypes = {
+    book: propTypes.array.isRequired,
+    query: propTypes.string.isRequired,
+    searchBooks: propTypes.array.isRequired,
+    updateBookSearch: propTypes.func.isRequired,
+    updateBookShelf: propTypes.func.isRequired,
 }
 
 export default BookSearch;

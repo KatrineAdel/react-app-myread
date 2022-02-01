@@ -5,18 +5,18 @@ import propTypes from 'prop-types';
 const BookShelf = (props) => {
 
     const bookCategory = props.books.filter((book) => book.shelf === props.category);
-
     return (
         <div className="bookshelf">
             <h2 className="bookshelf-title">{props.title}</h2>
             <div className="bookshelf-books">
-                <ol className="books-grid">{
-                    bookCategory.map((b) => (
-                        <li key={b.id}>
-                            <Book book={b} updateBookShelf={props.updateBookShelf}/>
-                        </li>
-                    ))
-                }
+                <ol className="books-grid">
+                    {
+                        bookCategory.map((b) => (
+                            <li key={b.id}>
+                                <Book book={b} updateBookShelf={props.updateBookShelf} />
+                            </li>
+                        ))
+                    }
                 </ol>
             </div>
         </div>
@@ -24,10 +24,10 @@ const BookShelf = (props) => {
 }
 
 BookShelf.propTypes = {
-    books: propTypes.object.isRequired,
-    title: propTypes.array.isRequired,
+    books: propTypes.array.isRequired,
+    title: propTypes.string.isRequired,
     updateBookShelf: propTypes.func.isRequired,
-    category: propTypes.array.isRequired,
+    category: propTypes.string.isRequired,
 }
 
 export default BookShelf;

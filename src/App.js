@@ -9,74 +9,53 @@ const BooksApp = () => {
 
   const [books, setBooks] = useState([]);
 
+  const [flip, setFlip] = useState(true);
+
   const [query, setQuery] = useState("");
 
   const [searchBooks, setSearchBooks] = useState([]);
 
-  const [combinedBooks, setCombinedBooks] = useState([]);
-
-  const [booksMap, setBooksMap] = useState([new Map()]);
-
 
   useEffect(() => {
     BooksAPI.getAll()
-      .then(data => {
-        setBooks(data)
-        setBooksMap(createMapOfBooks(data))
-      });
-  }, [])
-
-  useEffect(() => {
-    const comined = searchBooks.map(book => {
-      if (booksMap.has(book.id)) {
-        return booksMap.get(book.id);
-      } else {
-        return book;
-      }
-    })
-    setCombinedBooks(comined);
-  }, [searchBooks])
-
-  const createMapOfBooks = (books) => {
-    const map = new Map();
-    books.map(book => map.set(book.id, book));
-    return map;
-  }
-
-  useEffect(() => {
-    let isActive = true;
-    if (query) {
-      BooksAPI.search(query).then(data => {
-        if (data.error) {
-          setSearchBooks([])
-        }
-        else {
-          if (isActive) {
-            setSearchBooks(data);
-          }
-        }
+      .then(book => {
+        setBooks(book)
       })
-    }
-    return () => {
-      isActive = false;
-      setSearchBooks([]);
-    }
-  }, [query])
+  }, []);
 
   const updateBookShelf = (book, shelf) => {
-    const updateBooks = books.map(b => {
-      if (b.id === book.id) {
-        book.shelf = shelf;
-        return book;
-      }
-      return b;
-    })
-    if (!booksMap.has(book.id)) {
+    const updateBooks = books.findIndex((b) => b.id === book.id)
+    const updateBookList = books
+
+    if (updateBooks === -1) {
       book.shelf = shelf;
-      updateBooks.push(book)
+      updateBookList.push(book)
+    } else {
+      updateBookList[updateBooks].shelf = shelf
     }
-    setBooks(updateBooks);
+    setBooks(updateBookList);
     BooksAPI.update(book, shelf);
+    setFlip(!flip);
+  }
+
+  const updateBookSearch = (query) => {
+
+    BooksAPI.search(query).then((data) => {
+      if (data && data.length > 0) {
+        for (let q of data) {
+          for (let b of books) {
+            if (q.id === b.id) {
+              const booksIndex = books.findIndex((book) => book.id === q.id)
+              q.shelf = books[booksIndex].shelf
+              setFlip(!flip);
+            }
+          }
+        }
+      }
+      setSearchBooks(data);
+    })
+    setQuery(query);
+
   }
 
   return (
@@ -84,7 +63,7 @@ const BooksApp = () => {
       <Router>
         <Switch>
           <Route path="/search">
-            <BookSearch combinedBooks={combinedBooks} book={books} updateBookShelf={updateBookShelf} query={query} setQuery={setQuery} />
+            <BookSearch updateBookSearch={updateBookSearch} searchBooks={searchBooks} query={query} book={books} updateBookShelf={updateBookShelf} />
           </Route>
           <Route path="/">
             <div className="list-books">
@@ -93,9 +72,9 @@ const BooksApp = () => {
               </div>
               <div className="list-books-content">
                 <div>
-                  <BookShelf title="Currently Reading" books={books} category={"currentlyReading"} updateBookShelf={updateBookShelf}/>
-                  <BookShelf title="Want To Read" books={books} category={"wantToRead"} updateBookShelf={updateBookShelf}/>
-                  <BookShelf title="Read" books={books} category={"read"} updateBookShelf={updateBookShelf}/>
+                  <BookShelf title="Currently Reading" books={books} category={"currentlyReading"} updateBookShelf={updateBookShelf} />
+                  <BookShelf title="Want To Read" books={books} category={"wantToRead"} updateBookShelf={updateBookShelf} />
+                  <BookShelf title="Read" books={books} category={"read"} updateBookShelf={updateBookShelf} />
                 </div>
               </div>
               <div className="open-search">

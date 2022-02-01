@@ -12,8 +12,8 @@ const Book = (props) => {
                     <BookShelfChanger book={props.book} updateBookShelf={props.updateBookShelf} />
                 </div>
             </div>
-            <div className="book-title">{props.book.title}</div>
-            <div className="book-authors">{props.book.authors}</div>
+            <div className="book-title">{props.book && props.book.title}</div>
+            <div className="book-authors">{props.book && props.book.authors}</div>
         </div>
     )
 }
