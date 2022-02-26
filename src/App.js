@@ -7,13 +7,13 @@ import './App.css'
 
 const BooksApp = () => {
 
-  const [books, setBooks] = useState([]);
-
+  let [books, setBooks] = useState([]);
   let [flip, setFlip] = useState(true);
 
-  const [query, setQuery] = useState("");
+  let [query, setQuery] = useState("");
 
-  const [searchBooks, setSearchBooks] = useState([]);
+  let [searchBooks, setSearchBooks] = useState([]);
+
 
   useEffect(() => {
     BooksAPI.getAll()
@@ -37,11 +37,11 @@ const BooksApp = () => {
     }
     setBooks(updateBooks);
     BooksAPI.update(book, shelf);
-    setFlip(!flip);
+
   }
 
   useEffect(() => {
-    if (query.length !== 0) {
+    if (query.length > 0) {
       BooksAPI.search(query).then((data) => {
         if (data.error) {
           setSearchBooks([]);
@@ -53,16 +53,21 @@ const BooksApp = () => {
                 if (b.id === q.id) {
                   const booksIndex = books.findIndex((book) => book.id === q.id)
                   q.shelf = books[booksIndex].shelf
+
                 }
               }
             }
             setSearchBooks(data);
-            setFlip(!flip);
           }
         }
       })
     }
+    else {
+      return setSearchBooks([]);
+    }
+    setFlip(!flip);
   }, [query])
+
 
   return (
     <div className="app">
